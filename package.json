@@ -1,0 +1,76 @@
+{
+  "name": "dwn.nonni.org",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "description": "Implement @web5/dwn-server and deploy to my personal domain",
+  "scripts": {
+    "clean": "rimraf dist && rimraf generated/*",
+    "build:esm": "npm run clean & tsc -p tsconfig.json",
+    "build:cjs": "npm run build:esm && node build/create-cjs-bundle.cjs && echo '{\"type\": \"commonjs\"}' > ./dist/cjs/package.json",
+    "build": "npm run clean && npm run build:esm",
+    "image:build": "docker build -t registry.digitalocean.com/nonni/dwn-server-nonni-org:$(git rev-parse --short HEAD) .",
+    "image:push": "docker push registry.digitalocean.com/nonni/dwn-server:$(git rev-parse --short HEAD)",
+    "start": "node dist/esm/src/index.js"
+  },
+  "homepage": "https://dpm.software",
+  "bugs": {
+    "url": "https://github.com/bnonni/dpm/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bnonni/dpm.git"
+  },
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Bryan Nonni",
+      "url": "https://github.com/bnonni"
+    }
+  ],
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js"
+    }
+  },
+  "keywords": [
+    "decentralized",
+    "decentralized-applications",
+    "decentralized-identity",
+    "decentralized-web",
+    "web5",
+    "dpm",
+    "package manager",
+    "decentralized package manager",
+    "dwn",
+    "dweb node",
+    "decentralized web node",
+    "dwn protocol"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.10.0",
+    "@types/bytes": "^3.1.4",
+    "@types/node": "^22.5.4",
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
+    "eslint-plugin-mocha": "^10.5.0",
+    "globals": "^15.9.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.5.0"
+  },
+  "dependencies": {
+    "@web5/dwn-server": "^0.4.10",
+    "bytes": "^3.1.2"
+  }
+}
