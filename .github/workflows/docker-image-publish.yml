@@ -7,70 +7,39 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Create and publish a Docker image
+name: Build and Push Docker Image to DigitalOcean
 
 on:
   push:
-    branches: ['main']
+    branches:
+      - main # Trigger action on push to the 'main' branch
+
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  REGISTRY: registry.digitalocean.com/nonni
+  IMAGE_NAME: dwn-server
 
 jobs:
-  build-and-push-image:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install doctl
+      run: |
+        sudo snap install doctl
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    - name: Authenticate with DigitalOcean
+      run: doctl auth init --access-token ${{ secrets.DO_ACCESS_TOKEN }}
 
-      - name: Create DWN Server docker image tag names
-        id: create_docker_image_tag_names
-        run: |
-          # extract the DWN Server version from the package.json
-          dwn_server_version=$(jq -r '.version' package.json)
+    - name: Log in to DigitalOcean Container Registry via doctl
+      run: doctl registry login
 
-          # extract the DWN SDK version from the package.json
-          dwn_sdk_version=$(jq -r '.dependencies."@tbd54566975/dwn-sdk-js"' package.json)
+    - name: Build Docker image
+      run: docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
 
-          # construct a image tag names using DWN server & DWN SDK versions
-          # (e.g. ghcr.io/tbd54566975/dwn-server:0.4.3)
-          # (e.g. ghcr.io/tbd54566975/dwn-server:dwn-sdk-0.4.4)
-          dwn_server_version_tag_name=${{ env.REGISTRY }}/${IMAGE_NAME,,}:$dwn_server_version
-          dwn_sdk_version_tag_name=${{ env.REGISTRY }}/${IMAGE_NAME,,}:dwn-sdk-$dwn_sdk_version
-
-          # write the image tag names to the step output for use later/below
-          echo "dwn_server_version_tag_name=$dwn_server_version_tag_name" >> $GITHUB_OUTPUT
-          echo "dwn_sdk_version_tag_name=$dwn_sdk_version_tag_name" >> $GITHUB_OUTPUT
-        env:
-          IMAGE_NAME: ${{ env.IMAGE_NAME }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ steps.create_docker_image_tag_names.outputs.dwn_server_version_tag_name }}
-            ${{ steps.create_docker_image_tag_names.outputs.dwn_sdk_version_tag_name }}
-          labels: ${{ steps.meta.outputs.labels }}
+    - name: Push Docker image to DigitalOcean Registry
+      run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
