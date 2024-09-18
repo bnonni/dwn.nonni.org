@@ -37,7 +37,7 @@ jobs:
       run: doctl registry login
 
     - name: Build Docker image
-      run: docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
+      run: docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }} .
 
     - name: Push Docker image to DigitalOcean Registry
-      run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}
