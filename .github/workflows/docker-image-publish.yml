@@ -1,37 +1,37 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+# # This workflow uses actions that are not certified by GitHub.
+# # They are provided by a third-party and are governed by
+# # separate terms of service, privacy policy, and support
+# # documentation.
 
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
+# # GitHub recommends pinning actions to a commit SHA.
+# # To get a newer version, you will need to update the SHA.
+# # You can also reference a tag or branch, but the action may change without warning.
 
-name: Build and Push Docker Image to DigitalOcean
+# name: Build and Push Docker Image to DigitalOcean
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v3
 
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DO_ACCESS_TOKEN }}
+#     - name: Install doctl
+#       uses: digitalocean/action-doctl@v2
+#       with:
+#         token: ${{ secrets.DO_ACCESS_TOKEN }}
 
-    - name: Log in to DigitalOcean Container Registry via doctl
-      run: doctl registry login
+#     - name: Log in to DigitalOcean Container Registry via doctl
+#       run: doctl registry login
 
-    - name: Build Docker image
-      run: docker build -t registry.digitalocean.com/nonni/dwn-server .
+#     - name: Build Docker image
+#       run: docker build -t registry.digitalocean.com/nonni/dwn-server Dockerfile
 
-    - name: Push Docker image to DigitalOcean Registry
-      run: docker push registry.digitalocean.com/nonni/dwn-server
+#     - name: Push Docker image to DigitalOcean Registry
+#       run: docker push registry.digitalocean.com/nonni/dwn-server
