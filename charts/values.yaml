@@ -10,7 +10,7 @@ image:
 service:
   type: ClusterIP
   port: 80
-  targetPort: 3000
+  targetPort: 8080
 
 ingress:
   enabled: false
@@ -48,6 +48,6 @@ resources:
 customLabels: {}
 
 env:
-  DS_PORT: 3000
+  DS_PORT: 8080
   DS_MAX_RECORD_DATA_SIZE: '1gb'
   DS_WEBSOCKET_SERVER: 'on'

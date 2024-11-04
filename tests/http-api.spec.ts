@@ -72,7 +72,7 @@ describe('http api', function () {
 
   beforeEach(async function () {
     sinon.restore();
-    await httpApi.start(3000);
+    await httpApi.start(8080);
 
     // generate a new persona for each test to avoid state pollution
     alice = await TestDataGenerator.generateDidKeyPersona();
@@ -129,7 +129,7 @@ describe('http api', function () {
       const dataBytes = await DataStream.toBytes(dataStream);
 
       // Attempt an initial RecordsWrite with the invalid message to ensure the DWN returns an error.
-      const responseInitialWrite = await fetch('http://localhost:3000', {
+      const responseInitialWrite = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -216,7 +216,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const responseInitialWrite = await fetch('http://localhost:3000', {
+      const responseInitialWrite = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -243,7 +243,7 @@ describe('http api', function () {
         message: overWrite.toJSON(),
         target: alice.did,
       });
-      const responseOverwrite = await fetch('http://localhost:3000', {
+      const responseOverwrite = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -271,7 +271,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const responeTombstone = await fetch('http://localhost:3000', {
+      const responeTombstone = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -284,7 +284,7 @@ describe('http api', function () {
 
   describe('health check', function () {
     it('returns a health check', async function () {
-      const response = await fetch('http://localhost:3000/health', {
+      const response = await fetch('http://localhost:8080/health', {
         method: 'GET',
       });
       expect(response.status).to.equal(200);
@@ -293,7 +293,7 @@ describe('http api', function () {
 
   describe('default http get response', function () {
     it('returns returns a default message', async function () {
-      const response = await fetch('http://localhost:3000/', {
+      const response = await fetch('http://localhost:8080/', {
         method: 'GET',
       });
       expect(response.status).to.equal(200);
@@ -321,7 +321,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      let response = await fetch('http://localhost:3000', {
+      let response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -339,7 +339,7 @@ describe('http api', function () {
       expect(reply.status.code).to.equal(202);
 
       response = await fetch(
-        `http://localhost:3000/${alice.did}/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${alice.did}/records/${recordsWrite.message.recordId}`,
       );
       const blob = await response.blob();
 
@@ -365,7 +365,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      let response = await fetch('http://localhost:3000', {
+      let response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -383,7 +383,7 @@ describe('http api', function () {
       expect(reply.status.code).to.equal(202);
 
       response = await fetch(
-        `http://localhost:3000/${alice.did}/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${alice.did}/records/${recordsWrite.message.recordId}`,
       );
 
       expect(response.status).to.equal(404);
@@ -393,7 +393,7 @@ describe('http api', function () {
       const { recordsWrite } = await createRecordsWriteMessage(alice);
 
       const response = await fetch(
-        `http://localhost:3000/${alice.did}/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${alice.did}/records/${recordsWrite.message.recordId}`,
       );
       expect(response.status).to.equal(404);
     });
@@ -403,14 +403,14 @@ describe('http api', function () {
       const { recordsWrite } = await createRecordsWriteMessage(unauthorized);
 
       const response = await fetch(
-        `http://localhost:3000/${unauthorized.did}/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${unauthorized.did}/records/${recordsWrite.message.recordId}`,
       );
       expect(response.status).to.equal(404);
     });
 
     it('returns a 404 for invalid record id', async function () {
       const response = await fetch(
-        `http://localhost:3000/${alice.did}/records/kaka`,
+        `http://localhost:8080/${alice.did}/records/kaka`,
       );
       expect(response.status).to.equal(404);
     });
@@ -437,7 +437,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      let response = await fetch('http://localhost:3000', {
+      let response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -455,7 +455,7 @@ describe('http api', function () {
       expect(reply.status.code).to.equal(202);
 
       response = await fetch(
-        `http://localhost:3000/${alice.did}/read/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${alice.did}/read/records/${recordsWrite.message.recordId}`,
       );
       const blob = await response.blob();
 
@@ -481,7 +481,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      let response = await fetch('http://localhost:3000', {
+      let response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -499,7 +499,7 @@ describe('http api', function () {
       expect(reply.status.code).to.equal(202);
 
       response = await fetch(
-        `http://localhost:3000/${alice.did}/read/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${alice.did}/read/records/${recordsWrite.message.recordId}`,
       );
 
       expect(response.status).to.equal(404);
@@ -509,7 +509,7 @@ describe('http api', function () {
       const { recordsWrite } = await createRecordsWriteMessage(alice);
 
       const response = await fetch(
-        `http://localhost:3000/${alice.did}/read/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${alice.did}/read/records/${recordsWrite.message.recordId}`,
       );
       expect(response.status).to.equal(404);
     });
@@ -519,14 +519,14 @@ describe('http api', function () {
       const { recordsWrite } = await createRecordsWriteMessage(unauthorized);
 
       const response = await fetch(
-        `http://localhost:3000/${unauthorized.did}/read/records/${recordsWrite.message.recordId}`,
+        `http://localhost:8080/${unauthorized.did}/read/records/${recordsWrite.message.recordId}`,
       );
       expect(response.status).to.equal(404);
     });
 
     it('returns a 404 for invalid record id', async function () {
       const response = await fetch(
-        `http://localhost:3000/${alice.did}/read/records/kaka`,
+        `http://localhost:8080/${alice.did}/read/records/kaka`,
       );
       expect(response.status).to.equal(404);
     });
@@ -555,7 +555,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response = await fetch('http://localhost:3000', {
+      const response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -566,7 +566,7 @@ describe('http api', function () {
 
       // Fetch the protocol definition using the HTTP API
       const base64urlEncodedProtocol = Convert.string(protocolConfigure.message.descriptor.definition.protocol).toBase64Url();
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/${base64urlEncodedProtocol}`;
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/${base64urlEncodedProtocol}`;
       const protocolQueryResponse = await fetch(protocolUrl);
       expect(protocolQueryResponse.status).to.equal(200);
 
@@ -597,7 +597,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response = await fetch('http://localhost:3000', {
+      const response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -608,13 +608,13 @@ describe('http api', function () {
 
       // Fetch the protocol definition using the HTTP API
       const base64urlEncodedProtocol = Convert.string(protocolConfigure.message.descriptor.definition.protocol).toBase64Url();
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/${base64urlEncodedProtocol}`;
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/${base64urlEncodedProtocol}`;
       const protocolQueryResponse = await fetch(protocolUrl);
       expect(protocolQueryResponse.status).to.equal(404);
     });
 
     it('returns a 400 if protocol is not base64url encoded', async function () {
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/invalid-protocol`;
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/invalid-protocol`;
       const protocolQueryResponse = await fetch(protocolUrl);
       expect(protocolQueryResponse.status).to.equal(400);
       expect(await protocolQueryResponse.text()).to.equal('Bad Request');
@@ -644,7 +644,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response = await fetch('http://localhost:3000', {
+      const response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -672,7 +672,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response2 = await fetch('http://localhost:3000', {
+      const response2 = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest2),
@@ -682,7 +682,7 @@ describe('http api', function () {
       expect(response2.status).to.equal(200);
 
       // now query for a list of protocols
-      const protocolQueryUrl = `http://localhost:3000/${alice.did}/query/protocols`;
+      const protocolQueryUrl = `http://localhost:8080/${alice.did}/query/protocols`;
       const protocolQueryResponse = await fetch(protocolQueryUrl);
       expect(protocolQueryResponse.status).to.equal(200);
 
@@ -718,7 +718,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response = await fetch('http://localhost:3000', {
+      const response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -748,7 +748,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const recordsWriteResponse = await fetch('http://localhost:3000', {
+      const recordsWriteResponse = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(recordsWriteDwnRequest),
@@ -761,7 +761,7 @@ describe('http api', function () {
 
       // Fetch the record using the HTTP API
       const base64urlEncodedProtocol = Convert.string(protocolConfigure.message.descriptor.definition.protocol).toBase64Url();
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/${base64urlEncodedProtocol}/foo`;
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/${base64urlEncodedProtocol}/foo`;
       const recordReadResponse = await fetch(protocolUrl);
       expect(recordReadResponse.status).to.equal(200);
 
@@ -780,7 +780,7 @@ describe('http api', function () {
       const recordsQueryCreateSpy = sinon.spy(RecordsQuery, 'create');
 
       const base64urlEncodedProtocol = Convert.string('http://example.com/protocol').toBase64Url();
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/${base64urlEncodedProtocol}/foo/`; // trailing slash
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/${base64urlEncodedProtocol}/foo/`; // trailing slash
       const recordReadResponse = await fetch(protocolUrl);
       expect(recordReadResponse.status).to.equal(404);
 
@@ -811,7 +811,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response = await fetch('http://localhost:3000', {
+      const response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -841,7 +841,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const recordsWriteResponse = await fetch('http://localhost:3000', {
+      const recordsWriteResponse = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(recordsWriteDwnRequest),
@@ -854,7 +854,7 @@ describe('http api', function () {
 
       // Fetch the record using the HTTP API
       const base64urlEncodedProtocol = Convert.string(protocolConfigure.message.descriptor.definition.protocol).toBase64Url();
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/${base64urlEncodedProtocol}/foo`;
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/${base64urlEncodedProtocol}/foo`;
       const recordReadResponse = await fetch(protocolUrl);
       expect(recordReadResponse.status).to.equal(404);
     });
@@ -862,14 +862,14 @@ describe('http api', function () {
     it('returns a 400 if protocol path is not provided', async function () {
       // Fetch a protocol record without providing a protocol path 
       const base64urlEncodedProtocol = Convert.string('http://example.com/protocol').toBase64Url();
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/${base64urlEncodedProtocol}/`; // missing protocol path
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/${base64urlEncodedProtocol}/`; // missing protocol path
       const recordReadResponse = await fetch(protocolUrl);
       expect(recordReadResponse.status).to.equal(400);
       expect(await recordReadResponse.text()).to.equal('protocol path is required');
     });
 
     it('returns a 400 error if protocol cannot be base64url encoded', async function () {
-      const protocolUrl = `http://localhost:3000/${alice.did}/read/protocols/invalid-protocol/foo`;
+      const protocolUrl = `http://localhost:8080/${alice.did}/read/protocols/invalid-protocol/foo`;
       const recordReadResponse = await fetch(protocolUrl);
       expect(recordReadResponse.status).to.equal(400);
       expect(await recordReadResponse.text()).to.equal('Bad Request');
@@ -897,7 +897,7 @@ describe('http api', function () {
         target: alice.did,
       });
 
-      const response = await fetch('http://localhost:3000', {
+      const response = await fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'dwn-request': JSON.stringify(dwnRequest),
@@ -915,7 +915,7 @@ describe('http api', function () {
       expect(reply.status.code).to.equal(202);
 
       const { entries } = await fetch(
-        `http://localhost:3000/${alice.did}/query?filter.recordId=${recordsWrite.message.recordId}&other.random.param=unused-value`,
+        `http://localhost:8080/${alice.did}/query?filter.recordId=${recordsWrite.message.recordId}&other.random.param=unused-value`,
       ).then(response => response.json()) as RecordsQueryReply;
 
       expect(entries?.length).to.equal(1);
@@ -923,7 +923,7 @@ describe('http api', function () {
 
     it('should return 400 if user provide invalid query', async function () {
       const response = await fetch(
-        `http://localhost:3000/${alice.did}/query?filter=invalid-filter`,
+        `http://localhost:8080/${alice.did}/query?filter=invalid-filter`,
       );
       expect(response.status).to.equal(400);
 
@@ -934,11 +934,11 @@ describe('http api', function () {
 
   describe('/info', function () {
     it('verify /info has some of the fields it is supposed to have', async function () {
-      const resp = await fetch(`http://localhost:3000/info`);
+      const resp = await fetch(`http://localhost:8080/info`);
       expect(resp.status).to.equal(200);
 
       const info = await resp.json();
-      expect(info['url']).to.equal('http://localhost:3000');
+      expect(info['url']).to.equal('http://localhost:8080');
       expect(info['server']).to.equal('@web5/dwn-server');
       expect(info['registrationRequirements']).to.include('terms-of-service');
       expect(info['registrationRequirements']).to.include(
@@ -947,7 +947,7 @@ describe('http api', function () {
     });
 
     it('verify /info signals websocket support', async function() {
-      let resp = await fetch(`http://localhost:3000/info`);
+      let resp = await fetch(`http://localhost:8080/info`);
       expect(resp.status).to.equal(200);
 
       let info = await resp.json();
@@ -960,9 +960,9 @@ describe('http api', function () {
 
       config.webSocketSupport = false;
       httpApi = await HttpApi.create(config, dwn, registrationManager);
-      await httpApi.start(3000);
+      await httpApi.start(8080);
 
-      resp = await fetch(`http://localhost:3000/info`);
+      resp = await fetch(`http://localhost:8080/info`);
       expect(resp.status).to.equal(200);
 
       info = await resp.json();
@@ -983,9 +983,9 @@ describe('http api', function () {
       const packageJsonConfig = config.packageJsonPath;
       config.packageJsonPath = '/some/invalid/file.json';
       httpApi = await HttpApi.create(config, dwn, registrationManager);
-      await httpApi.start(3000);
+      await httpApi.start(8080);
 
-      const resp = await fetch(`http://localhost:3000/info`);
+      const resp = await fetch(`http://localhost:8080/info`);
       const info = await resp.json();
       expect(resp.status).to.equal(200);
 
@@ -1011,9 +1011,9 @@ describe('http api', function () {
       const serverName = config.serverName;
       config.serverName = '@web5/dwn-server-2'
       httpApi = await HttpApi.create(config, dwn, registrationManager);
-      await httpApi.start(3000);
+      await httpApi.start(8080);
 
-      const resp = await fetch(`http://localhost:3000/info`);
+      const resp = await fetch(`http://localhost:8080/info`);
       const info = await resp.json();
       expect(resp.status).to.equal(200);
       

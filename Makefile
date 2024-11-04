@@ -8,4 +8,4 @@ docker-image:
 .PHONY: run-container
 run-container: docker-image
 	@echo "Starting docker image"
-	docker container run --init --rm --name dwn-server -p 3000:3000 dwn-server
+	docker container run --init --rm --name dwn-server -p 8080:8080 dwn-server

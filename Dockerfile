@@ -3,7 +3,7 @@
 FROM node:20-bookworm-slim
 
 ARG DS_PORT
-ENV DS_PORT=${DS_PORT:-3000}
+ENV DS_PORT=${DS_PORT:-8080}
 
 WORKDIR /dwn-server
 

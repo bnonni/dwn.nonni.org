@@ -15,7 +15,7 @@ if (!globalThis.crypto) {
 }
 
 describe('Web5 Connect scenarios', function () {
-  const web5ConnectBaseUrl = 'http://localhost:3000';
+  const web5ConnectBaseUrl = 'http://localhost:8080';
 
   let clock: sinon.SinonFakeTimers;
   let dwnServer: DwnServer;
@@ -71,7 +71,7 @@ describe('Web5 Connect scenarios', function () {
 
     // 2. Identity Provider (wallet) fetches the Web5 Connect Request object from the Web5 Connect server.
     const requestUrl = (await postWeb5ConnectRequestResult.json() as any).request_uri;
-    const regex = /^http:\/\/localhost:3000\/connect\/authorize\/[a-zA-Z0-9\-]{21,}\.jwt$/;
+    const regex = /^http:\/\/localhost:8080\/connect\/authorize\/[a-zA-Z0-9\-]{21,}\.jwt$/;
     expect(requestUrl).to.match(regex);
 
     let getWeb5ConnectRequestResult;
