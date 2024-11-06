@@ -29,10 +29,10 @@ if (!globalThis.crypto) {
 }
 
 describe('Registration scenarios', function () {
-  const dwnMessageEndpoint = 'http://localhost:3000';
-  const termsOfUseEndpoint = 'http://localhost:3000/registration/terms-of-service';
-  const proofOfWorkEndpoint = 'http://localhost:3000/registration/proof-of-work';
-  const registrationEndpoint = 'http://localhost:3000/registration';
+  const dwnMessageEndpoint = 'http://localhost:8080';
+  const termsOfUseEndpoint = 'http://localhost:8080/registration/terms-of-service';
+  const proofOfWorkEndpoint = 'http://localhost:8080/registration/proof-of-work';
+  const registrationEndpoint = 'http://localhost:8080/registration';
 
   // let didResolverCache = new DidResolverCacheLevel({ location: 'RESOLVERCACHE' });
   let alice: Persona;

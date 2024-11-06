@@ -16,12 +16,12 @@ export const config = {
    * This is used to construct URL paths such as the `Request URI` in the Web5 Connect flow.
    * Should NOT be pointing to `localhost` for production use.
    */
-  baseUrl: process.env.DWN_BASE_URL || 'http://localhost:3000',
+  baseUrl: 'http://localhost:8080',
 
   /**
    * Port that server listens on.
    */
-  port: parseInt(process.env.DS_PORT || '3000'),
+  port: parseInt('8080'),
 
   /**
    * The URL of the TTL cache used by the DWN.
